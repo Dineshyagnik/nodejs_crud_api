@@ -14,10 +14,13 @@ module.exports = (req, res) => {
     }
     else if (!regexV4.test(id)) {
         res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(res.write(JSON.stringify({ title: "Validation Failed", message: 'UUID is not valid' })));
+        res.end(
+            JSON.stringify({
+                title: "Validation Failed", message: 'UUID is not valid'
+            })
+        );
     }
-    else if (regexV4.test(id)) {
-        res.statusCode = 200;
+    else if (baseUrl === "/api/movies" && regexV4.test(id)) {
         res.setHeader("Content-Type", "application/json");
         let filteredMovie = req.movies.filter((movie) => {
             return movie.id === id;
@@ -28,13 +31,13 @@ module.exports = (req, res) => {
             res.end();
         }
         else {
-            res.statusCode = 400;
+            res.statusCode = 404;
             res.write(JSON.stringify({ title: "Not Found", message: 'Movie not found' }));
             res.end();
         }
     }
     else {
         res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(res.write(JSON.stringify({ title: "Not Found", message: 'Route not found' })));
+        res.end((JSON.stringify({ title: "Not Found", message: 'Route not found' })));
     }
 };
